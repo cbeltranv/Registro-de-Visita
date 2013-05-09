@@ -1,0 +1,96 @@
+<div class="accordion" id="accordion2">
+    <div class="accordion-group">
+        <div class="accordion-heading">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne">
+                Gráfico: Relación Global del Estado</a>
+        </div>
+        <div id="collapseOne" class="accordion-body collapse">
+            <div class="accordion-inner">
+                <div id="grafico"></div>
+            </div>
+        </div>
+    </div>
+    <div class="accordion-group">
+        <div class="accordion-heading">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseTwo">
+                Gráfico: Global registrados por Municipio</a>
+        </div>
+        <div id="collapseTwo" class="accordion-body collapse">
+            <div class="accordion-inner">
+                <div id="grafico1"><h3>En Construccion</h3></div>
+            </div>
+        </div>
+    </div>
+    <div class="accordion-group">
+        <div class="accordion-heading">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseThree">
+                Lista por Municipio</a>
+        </div>
+        <div id="collapseThree" class="accordion-body collapse">
+            <div class="accordion-inner">
+                <table class="table table-bordered table-hover table-condesed table-striped">
+                    <tr>
+                        <th style="width: 60%; text-align: center;">MUNICIPIO</th>
+                        <th style="width: 20%; text-align: center;">CV</th>
+                        <th style="width: 20%; text-align: center;">CARGADOS</th>
+                    </tr>
+                    <?php foreach(Load::model('sys/municipio')->find() as $m): ?>
+                    <tr>
+                        <td><?php echo $m->nombre; ?></td>
+                        <?php $count = Load::model('sys/centro_votacion')->count("cod_municipio = $m->id"); ?>
+                        <td style="text-align: center;"><?php echo $count; ?></td>
+                        <?php $cc = Load::model('sys/responsables')->count_cargados($m->id); ?>
+                        <td style="text-align: center;"><?php echo $cc; ?></td>
+                    </tr>
+                    <?php endforeach; ?>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+            
+
+<?php
+$cargados = Load::model('sys/responsables')->total();
+$total = Load::model('sys/centro_votacion')->count();
+$faltante = $total - $cargados;
+?>
+<script type="text/javascript">
+$(function () {
+    $('#grafico').highcharts({
+        chart: {
+            plotBackgroundColor: null, plotBorderWidth: null, plotShadow: false },
+        title: { text: '' },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.percentage}%</b>',
+            percentageDecimals: 1
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true, cursor: 'pointer',
+                dataLabels: {
+                    enabled: true, color: '#000000', connectorColor: '#000000',
+                        formatter: function() {
+                            return '<b>'+ this.point.name +'</b>: '+ this.point.y +'<br/><b>Porc.: </b>'+
+                            this.percentage +'%';
+                        }
+                }
+            }
+        },
+        series: [{
+            type: 'pie', name: 'Relación Global',
+            data: [
+                ['CV por Registrar',<?php echo $faltante; ?>],
+                {
+                    name: 'CV Registrados',
+                    y: <?php echo $cargados; ?>,
+                    sliced: true,
+                    selected: true
+                },
+            ]
+        }]
+    });
+});
+</script>
+<?php echo Tag::js('hc/highcharts'); ?>
+<?php echo Tag::js('hc/exporting'); ?>

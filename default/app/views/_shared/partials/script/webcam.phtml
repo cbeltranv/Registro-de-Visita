@@ -1,0 +1,16 @@
+<?php echo Tag::js('webcam/webcam'); ?>
+<script language="JavaScript">
+
+    webcam.set_api_url('<?php APP_PATH. "libs/webcam.php"; ?>'); // Fichero de Subida de la Foto
+    webcam.set_swf_url('<?php echo PUBLIC_PATH.'javascript/webcam/'; ?>webcam.swf'); // Fichero SWF
+    webcam.set_quality(90); // Calidad del JPEG (1 -- 100)
+    webcam.set_shutter_sound(true); // Sonido del Click de la Camara
+    webcam.shutter_url = '<?php echo PUBLIC_PATH.'javascript/webcam/'; ?>shutter.mp3'; // Fichero del Sonido
+    
+    // Eventos (onLoad, onComplete, onError)
+    webcam.set_hook( 'onComplete', 'my_callback_function' );
+
+    function my_callback_function(response) {
+        alert("Success! PHP returned: " + response);
+    }
+</script>

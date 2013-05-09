@@ -1,0 +1,56 @@
+<div class="page-header">
+    <h1><?php eh($titulo) ?>
+        <?php //echo Html::linkAction('', 'Ver Lista', 'class="btn btn-info pull-right hidden-phone"') ?>
+    </h1>
+</div>
+<div class="row">
+    <div class="span10 offset1">
+        <div id="res-form-ajax"><?php View::content() ?></div>
+        <?php //echo Ajax::form('res-form-ajax', NULL, 'form-horizontal') ?>
+        <?php echo Form::openMultipart(NULL,'class="form-horizontal"') ?> 
+        <?php echo Form::hidden('sys.id') ?>
+        <table class="table table-striped table-hover table-condensed">
+            <tr>
+                <th style="width: 20%;">Nombre y Apellido: </th>
+                <td style="width: 30%;"><?php echo $reg->nombres; ?></td>
+                <th style="width: 20%;">Cédula: </th>
+                <td style="width: 30%;"><?php echo $reg->cedula; ?></td>
+            </tr>
+            <tr class="success">
+                <th style="width: 20%;">Municipio: </th>
+                <?php $mun = Load::model('sys/municipio')->find_first($reg->municipio_id); ?>
+                <td style="width: 30%;"><?php echo $mun->nombre; ?></td>
+                <th style="width: 20%;">Parroquia: </th>
+                <?php $paq = Load::model('sys/parroquia')->find_first($reg->parroquia_id); ?>
+                <td style="width: 30%;"><?php echo $paq->nombre; ?></td>
+            </tr>
+            <tr>
+                <th style="width: 20%;">Teléfono: </th>
+                <td style="width: 30%;"><?php echo $reg->telef1; ?>
+                <?php if(!empty($reg->telef2)) ?>
+                    - <?php echo $reg->telef2; ?>
+                </td>
+                <th style="width: 20%;">Edad: </th>
+                <td style="width: 30%;"><?php echo Plug::CalculaEdad($reg->f_nac) ?> Años</td>
+            </tr>
+        </table>
+        <div class="row">
+            <div class="span5">
+                <div class="control-group">
+                    <label class="control-label" for="sys_servicios_id">Servicios: </label>
+                    <div class="controls"><?php echo Form::dbSelect('sys.servicios_id','nombre',array('sys/servicios','find')); ?></div>
+                </div> 
+            </div>
+            <div class="span5">
+                <div class="control-group">
+                    <label class="control-label" for="sys_descripcion">Descripción: </label>
+                    <div class="controls"><?php echo Form::textarea('sys.descripcion'); ?></div>
+                </div> 
+            </div>
+        </div>
+        <div class="form-actions" style="padding-left: 40%;">
+            <?php echo Form::submit('GUARDAR', 'class="btn btn-primary"') ?>
+            <?php echo Form::reset('CANCELAR', 'class="btn btn-danger"') ?>
+        </div>
+    </div>
+</div>

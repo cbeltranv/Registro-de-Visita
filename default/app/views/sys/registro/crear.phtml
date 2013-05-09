@@ -1,0 +1,120 @@
+<div class="page-header">
+    <h1><?php eh($titulo) ?>
+        <?php //echo Html::linkAction('', 'Ver Lista', 'class="btn btn-info pull-right hidden-phone"') ?>
+    </h1>
+</div>
+<div class="row">
+    <div class="span10 offset1">
+        <div id="res-form-ajax"><?php View::content() ?></div>
+        <?php //echo Ajax::form('res-form-ajax', NULL, 'form-horizontal') ?>
+        <?php echo Form::openMultipart(NULL,'class="form-horizontal"') ?> 
+        <?php echo Form::hidden('sys.id') ?>
+        <div class="row">
+            <div class="span5">
+                <div class="control-group">
+                    <label class="control-label" for="sys_cedula">Cedula: </label>
+                    <div class="controls"><?php echo Form::text('sys.cedula'); ?></div>
+                </div>                
+                <div class="control-group">
+                    <label class="control-label" for="sys_nombres">Nombre y Apellido: </label>
+                    <div class="controls"><?php echo Form::text('sys.nombres'); ?></div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="sys_f_nac">Fecha Nac.: </label>
+                    <div class="controls"><?php echo Form::date('sys.f_nac'); ?></div>
+                </div> 
+                <div class="control-group">
+                    <label class="control-label" for="sys_sexo">Sexo: </label>
+                    <?php $sex = array(''=>'Seleccione','F'=>'Femenino','M'=>'Masculino'); ?>
+                    <div class="controls"><?php echo Form::select('sys.sexo',$sex); ?></div>
+                </div> 
+                <div class="control-group">
+                    <label class="control-label" for="sys_municipio_id">Municipio: </label>
+                    <div class="controls"><?php echo Form::dbSelect('sys.municipio_id','nombre',array('sys/municipio','find')); ?></div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="sys_parroquia_id">Parroquia: </label>
+                    <div class="controls" id="subParroquia"></div>
+                </div>
+            </div>
+            <div class="span5">
+                <div class="control-group">
+                    <label class="control-label" for="sys_sector">Sector: </label>
+                    <div class="controls"><?php echo Form::text('sys.sector'); ?></div>
+                </div> 
+                <div class="control-group">
+                    <label class="control-label" for="sys_telef_1">Teléfono Principal: </label>
+                    <div class="controls"><?php echo Form::text('sys.telef1',array('maxlength'=>'11')); ?></div>
+                </div>                
+                <div class="control-group">
+                    <label class="control-label" for="sys_telef_2">Teléfono Secundario: </label>
+                    <div class="controls"><?php echo Form::text('sys.telef2',array('maxlength'=>'11')); ?></div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="sys_email">Correo Electrónico: </label>
+                    <div class="controls"><?php echo Form::text('sys.email'); ?></div>
+                </div> 
+                <div class="control-group">
+                    <label class="control-label" for="sys_l_nac">Twitter: </label>
+                    <div class="input-prepend">
+                        <span class="add-on">@</span>
+                        <?php echo Form::text('sys.twitter',array('class'=>'span2')); ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="span4 offset2">
+                <div id='camera'>
+                    <?php View::partial('script/webcam'); ?>
+                    <script language="JavaScript">
+        		document.write( webcam.get_html(320, 240) );
+                    </script>
+                </div>
+            </div>
+            <div class="span3 form-actions" style="padding-left: 20px;">
+                <form>
+                    <input type=button value="Configurar..." onClick="webcam.configure()" class="btn btn-info">
+                    <input type=button value="Tomar Foto" onClick="take_snapshot()" class="btn btn-success">
+                </form>
+            </div>
+            <div id="upload_results"></div>
+        </div>
+        <div class="form-actions" style="padding-left: 40%;">
+            <?php echo Form::submit('GUARDAR', 'class="btn btn-primary"') ?>
+            <?php echo Form::reset('CANCELAR', 'class="btn btn-danger"') ?>
+        </div>
+        <?php echo Form::close() ?>
+    <div id="images"></div>
+    </div>
+</div>
+
+
+
+<script type="text/javascript">
+    $("#sys_municipio_id").change(function(){
+        var parroquia_id = $('#sys_municipio_id').val();
+        url="<?php echo PUBLIC_PATH. "sys/variable/parroquia/"; ?>" + parroquia_id;
+        $("#subParroquia").load(url);
+    });
+    
+    webcam.set_hook('onComplete','my_completion_handler');
+    function take_snapshot() {
+	// take snapshot and upload to server
+	document.getElementById('upload_results').innerHTML = '<h2>Cargando...</h2>';
+	webcam.snap();
+    }
+		
+    function my_completion_handler(msg) {
+	// extract URL out of PHP output
+	if (msg.match(/(http\:\/\/\S+)/)) {
+	    var image_url = RegExp.$1;
+	    // show JPEG image in page
+	    document.getElementById('images').innerHTML = '<img src="' + image_url + '">' + document.getElementById('images').innerHTML;
+	    document.getElementById('upload_results').innerHTML = '<h1>Gracias!!</h1>';
+	    // reset camera for another shot
+	    webcam.reset();
+	}
+	else alert("PHP Error: " + msg);
+    }
+</script>

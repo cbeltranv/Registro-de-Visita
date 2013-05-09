@@ -1,0 +1,17 @@
+<footer>
+    <br> 
+    <p>
+        <strong>Tiempo: </strong> 
+        <span class="badge badge-success" style="margin-right: 15px;">
+            <?php echo round((microtime(1) - START_TIME), 4) . ' seg.'; ?>
+        </span>
+        <strong>Memoria Usada: </strong>
+        <span class="badge badge-warning">
+            <?php echo number_format(memory_get_usage() / 1048576, 2) . ' MB'; ?>
+        </span>
+        <span class="pull-right label label-important" style="padding: 5px;">
+            <a href="https://twitter.com/413j4nd70" target="_blank" style="color: #efefef;">
+            Desarrollado por Héctor Rodríguez</a>
+        </span>
+    </p>
+</footer>

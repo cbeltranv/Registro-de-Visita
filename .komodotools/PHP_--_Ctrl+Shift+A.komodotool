@@ -1,0 +1,11 @@
+{
+  "keyboard_shortcut": "Ctrl+Shift+A", 
+  "name": "PHP -- Ctrl+Shift+A", 
+  "value": [
+    "<?php !@#_currentPosecho !@#_anchor; ?>"
+  ], 
+  "set_selection": "true", 
+  "version": "1.0.7", 
+  "type": "snippet", 
+  "indent_relative": "true"
+}

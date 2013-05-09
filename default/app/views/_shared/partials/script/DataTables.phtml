@@ -1,0 +1,9 @@
+<?php echo Tag::js('DataTables/jquery.dataTables'); ?>
+<?php Tag::css('DataTables/demo_page'); ?>
+<?php Tag::css('DataTables/demo_table'); ?>
+<?php echo Html::includeCss(); ?>
+<script type="text/javascript" charset="utf-8">
+    $(document).ready(function() {
+	$('#<?php echo $id; ?>').dataTable();
+    } );
+</script>

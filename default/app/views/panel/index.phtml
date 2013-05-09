@@ -1,0 +1,56 @@
+<div class="page-header">
+    <h1><?php eh($titulo) ?></h1>
+</div>
+<div class="row">
+    <div class="span10 offset1">
+        <div><?php View::content(); ?></div>
+        <div class="row">
+            <div class="span5">
+                <div class="alert alert-success">
+                    <?php $dia = date("d-m-Y"); ?>
+                    <h3>Visitas de Hoy: <?php echo $dia; ?></h3><hr />
+                    <table class="table table-condensed">
+                        <tr>
+                            <th style="width: 60%;">SERVICIO</th>
+                            <th style="width: 20%;">CANT.</th>
+                            <th style="width: 20%;">PORC.</th>
+                        </tr>
+                        <?php foreach($estadisticas_del_dia As $edd): ?>
+                        <tr>
+                            <td><?php echo $edd->servicios; ?></td>
+                            <td><?php echo $edd->cant; ?></td>
+                            <?php $porc_1 = ($edd->cant * 100)/$total; ?>
+                            <td><?php echo round($porc_1,1); ?>%</td>
+                        </tr>
+                        <?php endforeach; ?>
+                        <tr>
+                            <th style="text-align: right;">TOTAL:</th>
+                            <th><?php echo $total; ?></th>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="span5">
+                <div>
+                    <h3>Registro Visita</h3><hr />
+                    <?php echo Form::open('sys/visita/buscar','post','class="form-inline"'); ?>
+                    <p>
+                        <?php echo Form::text('sys.cedula',array('placeholder'=>'Ingrese Cedula','maxlength'=>'8')); ?>
+                        <?php echo Form::submit('Buscar',array('class'=>'btn btn-primary')); ?>
+                    </p>
+                    <p>Debe Ingresar el Número de Cedula sin puntos ni comas, solo los números</p>
+                    <?php echo Form::close(); ?>
+                </div>
+                <div class="well well-small ">
+                    <h3>Quien Soy?</h3><hr />
+                    <p><span class="label label-warning pad">Usuario: <?php echo Auth::get('login'); ?></span>
+                    <span class="label label-info pad">Nombres y Apellidos: <?php echo Auth::get('nombres'); ?></span></p>
+                    <p><span class="label pad">Correo Electrónico: <?php echo Auth::get('email'); ?></span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    .pad { padding: 4px; margin: 5px;}
+</style>
